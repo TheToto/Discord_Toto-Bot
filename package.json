@@ -1,0 +1,43 @@
+{
+  "name": "toto-bot",
+  "version": "2.0.0",
+  "description": "A private discord bot",
+  "engines": {
+    "node": "9.3.0",
+    "npm": "5.6.0"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js"
+  },
+  "dependencies": {
+    "asciify-image": "github:Thetoto/asciify-image",
+    "discord.js": "^11.4.2",
+    "dotenv": "^6.0.0",
+    "erlpack": "github:hammerandchisel/erlpack",
+    "eval": "^0.1.2",
+    "express": "^4.16.3",
+    "ffmpeg": "0.0.4",
+    "ffmpeg-binaries": "^4.0.0",
+    "giphy-api": "^1.2.7",
+    "google-tts-api": "0.0.2",
+    "https": "^1.0.0",
+    "libsodium-wrappers": "^0.7.3",
+    "node-opus": "^0.3",
+    "random-int": "^1.0.0",
+    "simple-youtube-api": "^5.0.2",
+    "ytdl-core": "^0.24.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thetoto/Discord_Toto-Bot.git"
+  },
+  "author": "Thetoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Thetoto/Discord_Toto-Bot/issues"
+  },
+  "homepage": "https://github.com/Thetoto/Discord_Toto-Bot#readme"
+}
