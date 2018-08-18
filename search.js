@@ -1,9 +1,37 @@
 const https = require("https");
 var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
 var randomInt = require('random-int');
-//var YaBoss = require('yaboss');
+var request = require('request');
 
 
+module.exports.reverseSearch = function(channel, url) {
+  var options = {
+    url:"https://mrisa-app.herokuapp.com/search",
+    method:"POST",
+    headers:{
+        'Content-Type':'application/json'
+    },
+    json : {
+        "image_url":url,
+        "resized_images":false // Or true
+        }
+  };
+
+  request(options,(_err,_res,body)=>{
+      channel.send('', {
+        embed: {
+          footer: {
+            text: "L'image semble ressembler à ca... (Google Image reverse search)"
+          },
+          description: body.descriptions[0],
+          title: body.titles[0],
+          thumbnail: {
+               url: body.similar_images[0]
+            }
+         },
+      });
+  })
+}
 
 module.exports.qwantSearch = function (channel, string) {
   channel.send('Cette fonction est cassée.');

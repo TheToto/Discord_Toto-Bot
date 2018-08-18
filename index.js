@@ -146,6 +146,12 @@ client.on('message', async message => {
     });
   }
 
+  if(lower.startsWith("reverse ")) {
+    let text = message.content.slice(8);
+    search.reverseSearch(message.channel, text);
+    return;
+  }
+
   if (lower === ('merci')) {
     message.channel.send('SIMB !');
     return;
