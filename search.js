@@ -21,7 +21,7 @@ module.exports.reverseSearch = function(channel, url) {
       channel.send('', {
         embed: {
           footer: {
-            text: "L'image semble ressembler à ca... (Google Image reverse search)"
+            text: "Cette image me fait penser à : " + body.best_guess
           },
           description: body.descriptions[0],
           title: body.titles[0],
