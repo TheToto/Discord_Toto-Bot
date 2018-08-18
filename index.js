@@ -47,9 +47,9 @@ client.on("guildDelete", guild => {
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
   if (oldMember.user.bot || newMember.user.bot) return;
-  if (yt.getQueue().get(user.guild.id)) return; 
 
   let sayFunc = function(user) {
+    if (yt.getQueue().get(user.guild.id)) return; 
     googleTTS("Bienvenue à "+ user.voiceChannel.name.split('_').join(' ') + ", " + user.displayName , 'fr', 1)   // speed normal = 1 (default), slow = 0.24
     .then(function (url) {
       if (client.voiceConnections.get(user.voiceChannel.guild.id))
