@@ -3,66 +3,28 @@ var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
 var randomInt = require('random-int');
 var request = require('request');
 
+const embed = require('./embed');
 
-module.exports.reverseSearch = function(channel, url) {
-  var options = {
-    url:"https://mrisa-app.herokuapp.com/search",
-    method:"POST",
-    headers:{
-        'Content-Type':'application/json'
-    },
-    json : {
-        "image_url":url,
-        "resized_images":false // Or true
-        }
-  };
+  module.exports.reverseSearch = function(channel, url) {
+    var options = {
+      url:"https://mrisa-app.herokuapp.com/search",
+      method:"POST",
+      headers:{
+          'Content-Type':'application/json'
+      },
+      json : {
+          "image_url":url,
+          "resized_images":false // Or true
+          }
+    };
 
-  request(options,(_err,_res,body)=>{
-      channel.send('', {
-        embed: {
-          footer: {
-            text: "Cette image me fait penser à : " + body.best_guess
-          },
-          description: body.descriptions[0],
-          title: body.titles[0],
-          thumbnail: {
-               url: body.similar_images[0]
-            }
-         },
-      });
-  })
-}
-
-module.exports.qwantSearch = function (channel, string) {
-  channel.send('Cette fonction est cassée.');
-  /*google_image.search(string,10,function(url_list){
-    var i = randomInt(0, 10);
-    console.log(url_list);
-  });*/
-    /*npm install google-images-urlgoogle.list({
-        keyword: string,
-        num: 1,
-        detail: true,
-        nightmare: {
-        }
+    request(options,(_err,_res,body)=>{
+        channel.send(embed.makeReverse(body));
     })
-    .then(function (res) {
-        console.log(res);
-    }).catch(function(err) {
-        console.log('err', err);
-    });
-    //
-    var i = randomInt(0, 10);
-    qwant.search("images", { query: string, count: 1, offset: i, language: "french" }, function(err, data){
-      console.log(data);
-      if (err) return channel.send(err);
-      
-      if (data.data.result.items[0] == undefined) return channel.send("Rien trouvé :c");
-      channel.send("", {
-        file: "https:"+data.data.result.items[0].media_fullsize+".png" // Or replace with FileOptions object
-      });
-    });
-    */
+  }
+
+  module.exports.qwantSearch = function (channel, string) {
+    channel.send('Cette fonction est cassée.');
   }
   
   module.exports.giphySearch = function (channel, string) {
@@ -76,9 +38,7 @@ module.exports.qwantSearch = function (channel, string) {
           channel.send("J'ai rien trouvé :c");
           console.log("Nothing.");
         } else {
-          channel.send("", {
-            file: res.data[0].images.downsized_large.url // Or replace with FileOptions object
-          });
+          channel.send(embed.makeGiphy(res.data[0].images.downsized_large.url));
         } 
     });
   
@@ -93,9 +53,7 @@ module.exports.qwantSearch = function (channel, string) {
           console.log("giphy : nothing found, switch to search\n" + JSON.stringify(res));
           giphySearch(channel,string);
         } else {
-          channel.send("", {
-            file: res.data.fixed_height_downsampled_url // Or replace with FileOptions object
-          });
+          channel.send(embed.makeGiphy(res.data.fixed_height_downsampled_url));
         }
     });
   
@@ -104,6 +62,7 @@ module.exports.qwantSearch = function (channel, string) {
   module.exports.randomWiki = function(channel) {
     var url = 'https://fr.wikipedia.org/w/api.php?action=query&generator=random&grnnamespace=0&format=json';
     var title;
+    var id;
     https.get(url, function(res){
         var body = '';
   
@@ -119,7 +78,7 @@ module.exports.qwantSearch = function (channel, string) {
               if (fbResponse["query"]["pages"][obj].title != undefined)
               {
               title = fbResponse["query"]["pages"][obj].title;
-  
+              id = fbResponse["query"]["pages"][obj].pageid;
               break;
               }
             }
@@ -141,14 +100,14 @@ module.exports.qwantSearch = function (channel, string) {
                     if (fbResponse["query"]["pages"][obj].title != undefined)
                     {
                       contentt = fbResponse["query"]["pages"][obj].extract;
-          
+                      
                     break;
                     }
                   }
                   if (contentt == undefined) {
-                    channel.send("> **"+title + "** \n" + "_Pas de résumé_");
+                    channel.send(embed.makeWiki(title,"_Pas de résumé_",id));
                   } else {
-                  channel.send("> **"+title + "** \n" + contentt);
+                    channel.send(embed.makeWiki(title,contentt,id));
                   }
                   
               });
@@ -180,6 +139,7 @@ module.exports.searchWiki = function (channel,string) {
               return;
             }
             title = fbResponse.query.search[0].title;
+            id = fbResponse.query.search[0].pageid;
   
             url = "https://fr.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles="+title.replace(' ', '_');
             https.get(url, function(res){
@@ -203,9 +163,9 @@ module.exports.searchWiki = function (channel,string) {
                     }
                   }
                   if (contentt == undefined || contentt == "" || contentt == " ") {
-                    channel.send("> **"+title + "** \n" + "_Pas de résumé_");
+                    channel.send(embed.makeWiki(title,"_Pas de résumé_",id));
                   } else {
-                  channel.send("> **"+title + "** \n" + contentt);
+                    channel.send(embed.makeWiki(title,contentt,id));
                   }
                   
               });

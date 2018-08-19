@@ -11,7 +11,7 @@ const client = new Discord.Client();
 const yt = require('./yt');
 const search = require('./search');
 const hack = require('./hack');
-
+const embed = require('./embed');
 //Launch Webserver for Heroku free dynos
 require("./express");
 
@@ -27,6 +27,7 @@ client.on('error', console.error);
 
 client.on('ready', () => {
   console.log('Discord Bot is running'); 
+  embed.init(client);
   logChannel = client.channels.get('450184906581082112');   
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs` } });
 });
@@ -127,7 +128,7 @@ client.on('message', async message => {
   }
 
   if (lower.startsWith('ping')) {
-    message.reply('pong, ' + client.ping);
+    message.reply('pong : ' + client.ping);
     return;
   }
 
@@ -141,9 +142,7 @@ client.on('message', async message => {
   // A changer avec le nouveau tranzat creator
   if (lower.includes('tranzat')) {
     var i = Math.random();
-    message.channel.send("", {
-      file: 'https://tranzat.tk/tranzat/random.php?'+i+".png"
-    });
+    message.channel.send(embed.makeTranzat('https://tranzat.tk/tranzat/random.php?'+i+".png"));
   }
 
   if(lower.startsWith("reverse ")) {
