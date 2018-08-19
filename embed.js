@@ -6,21 +6,21 @@ module.exports.init = function(_client) {
 };
 
 module.exports.makeTranzat = function(img_url) {
-    if (!client) return;
     return embed = {
-        "embed": {
-          "url": "https://tranzat.tk",
-          "color": color,
-          "image": {
-            "url":  img_url
-          },
-          "author": {
-            "name": "Tranzat Creator",
-            "url": "https://tranzat.tk",
-            "icon_url": client.user.avatarURL
-          }
-        }
-    };
+        embed: {
+            color: color,
+            description: "Créez votre tranzat sur [Tranzat Creator](https://tranzat.tk)",
+            image: {
+                url: "attachment://tranzat.png"
+            },
+            author: {
+                name: "Tranzat Creator",
+                url: "https://tranzat.tk",
+                icon_url: "https://cdn.discordapp.com/attachments/480416542014701581/480772692908441631/tranzat.png"
+            }
+        },
+        files: [{ attachment: img_url, name: 'tranzat.png' }] 
+    }
 }
 
 module.exports.makeReverse = function(body) {
