@@ -29,7 +29,7 @@ client.on('ready', () => {
   console.log('Discord Bot is running'); 
   embed.init(client);
   logChannel = client.channels.get('450184906581082112');   
-  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs` } });
+  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
 client.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
@@ -38,12 +38,12 @@ client.on('reconnecting', () => console.log('I am reconnecting now!'));
  	
 client.on("guildCreate", guild => {
   logChannel.send(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs` } });
+  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
 client.on("guildDelete", guild => {
   logChannel.send(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs` } });
+  client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
 client.on('voiceStateUpdate', (oldMember, newMember) => {
@@ -234,23 +234,8 @@ client.on('message', async message => {
   }
 
   if (lower.includes('help me')) {
-    message.channel.send("__Je sais faire :__\n" + 
-    "**gif ...** = Cherche un gif sur Giphy\n" + 
-    "**img ...** = Cherche une image (Qwant)\n" + 
-    "**wiki ...** = Rechercher sur Wikipedia\n" +
-    "**learn me** = Apprend la vie avec Wikipedia.\n\n" +
-    "__Fonctions vocales :__\n" +
-    "**join** = Rejoins ton salon vocal\n" +
-    "**speak ...** = Lit le message à haute voix\n" +
-    "**leave** = Quitte le salon vocal\n" +
-    "__Youtube :__\n" +
-    "**play ...** = Lance une recherche sur YouTube (recherche YT ou lien vers musique ou playlist)\n" +
-    "**skip** = Passe à la musique suivante\n" +
-    "**pause** et **resume** = Pause/Reprend la lecture\n" +
-    "**stop** = Arrête la lecture\n" +
-    "**queue** = Voir la liste de lecture"
-  );
-  return;
+    message.channel.send(embed.makeHelp());
+    return;
   }
 
   let insult = ["ta gueule","tg","ferme la","connard","pd","salo","pute","ta mère","ta mer","ntm","ftg","fdp"];
