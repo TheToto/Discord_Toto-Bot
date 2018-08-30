@@ -18,8 +18,8 @@ require("./express");
 
 
 let logChannel;
-// Thetoto,Kim,Simby
-let authUsers = ["227537120758071296","389454596160094228","239062648208097280"];
+// Thetoto,Kim,Simby,Cheetwo,Rediamond
+let authUsers = ["227537120758071296","389454596160094228","239062648208097280","192631034683195393","205788570231767040"];
 
 client.on('warn', console.warn);
 
