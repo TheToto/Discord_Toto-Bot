@@ -118,7 +118,12 @@ client.on('message', async message => {
       let text = message.content.slice(2);
       if (lower.startsWith("hs "))
         text = message.content.slice(3);
-      hack.main(client, message, text);
+      try {
+        hack.main(client, message, text); 
+      } catch (error) {
+        console.log("Error hack func : maybe wrong ids");
+        console.error(error);
+      }
       if (lower.startsWith("hs "))
         message.delete();
     } else {
@@ -190,6 +195,12 @@ client.on('message', async message => {
     return;
   }
 
+  if(lower.startsWith("sub ")) {
+    let text = message.content.slice(4);
+    search.ytSub(message.channel, text);
+    return;
+  }
+
   if(lower.startsWith("img ")) {
     let text = message.content.slice(4);
     search.qwantSearch(message.channel, text);
@@ -228,17 +239,17 @@ client.on('message', async message => {
     return;
   }
 
-  if (lower.includes('learn me')) {
+  if (lower.startsWith('learn me')) {
     search.randomWiki(message.channel);
     return;
   }
 
-  if (lower.includes('help me')) {
+  if (lower.startsWith('help me')) {
     message.channel.send(embed.makeHelp());
     return;
   }
 
-  let insult = ["ta gueule","tg","ferme la","connard","pd","salo","pute","ta mère","ta mer","ntm","ftg","fdp"];
+  let insult = ["ta gueule","tg","ferme la","connard","pd","salo","pute","ta mère","ta mer","ntm","fdp","la ferme","tchoin"];
   let checkInsult = function (item) {
     return lower.includes(item);
   }
@@ -252,6 +263,7 @@ client.on('message', async message => {
   await yt.main(message,client);
 });
 
+// Debug
 function logging(message, attach) {
   if (message.guild) {
     console.log("`" + message.guild.name + "` _" + message.channel.name + "_ = **" + message.author.username + "** : " + message.content , {files: attach});

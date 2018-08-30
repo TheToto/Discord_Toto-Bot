@@ -2,6 +2,8 @@ const https = require("https");
 var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
 var randomInt = require('random-int');
 var request = require('request');
+const YouTube = require('simple-youtube-api');
+const youtube = new YouTube("AIzaSyCqBQKdwzqSBqrkWUPOlO-SSjC0vlgscFk");
 
 const embed = require('./embed');
 
@@ -21,6 +23,30 @@ const embed = require('./embed');
     request(options,(_err,_res,body)=>{
         channel.send(embed.makeReverse(body));
     })
+  }
+
+  module.exports.ytSub = function (channel, string) {
+    try {
+      
+      console.log(string);
+      let ytChannel;
+      youtube.searchChannels(string,1).then(results => 
+        { 
+          ytChannel = results[0];
+          if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne."); return;}
+          request('https://www.youtube.com/subscribe_embed?channelid=' + ytChannel.id, function (error, response, body) {
+            var regex = new RegExp('<span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed"  tabindex="0">([0-9]*)</span>');
+            var sub = regex.exec(body)[1];
+            var name = ytChannel.raw.snippet.channelTitle;
+            var img = ytChannel.raw.snippet.thumbnails.high;
+            channel.send(embed.makeYT(sub,name,img,ytChannel.id)).then(console.log).catch(console.log);
+          }); 
+        } ).catch(console.log);
+        
+    } catch (error) {
+      console.error(error);
+     channel.send("Je ne trouve pas cette chaîne."); 
+    }
   }
 
   module.exports.qwantSearch = function (channel, string) {

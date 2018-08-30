@@ -56,21 +56,41 @@ module.exports.makeWiki = function(title, content, id) {
 }
 
 module.exports.makeGiphy = function(img_url) {
-    return embed = {
-        "embed": {
-          "url": img_url,
-          "color": color,
-          "image": {
-            "url":  img_url
-          },
-          "author": {
-            "name": "Giphy",
-            "url": "https://giphy.com/",
-            "icon_url": "https://cdn.iconscout.com/icon/free/png-256/giphy-461796.png"
-          }
+  return embed = {
+      "embed": {
+        "url": img_url,
+        "color": color,
+        "image": {
+          "url":  img_url
+        },
+        "author": {
+          "name": "Giphy",
+          "url": "https://giphy.com/",
+          "icon_url": "https://cdn.iconscout.com/icon/free/png-256/giphy-461796.png"
         }
-    }
+      }
+  }
 }
+
+module.exports.makeYT = function(sub,name,img,id) {
+  return embed = {
+    "embed": {
+      "title": name,
+      "description": "Cette chaîne possède " + sub + " abonnés",
+      "url": "https://www.youtube.com/channel/" + id,
+      "color": color,
+      "thumbnail" : {
+        "url" : img.url
+      },
+      "author": {
+        "name": "Yotube",
+        "url": "https://youtube.com",
+        "icon_url": "https://cdn.discordapp.com/attachments/480416542014701581/484672637751001100/YouTube-icon.png"
+      }
+    }
+  }
+}
+
 
 module.exports.makeHelp = function() {
     if (!client) return {};

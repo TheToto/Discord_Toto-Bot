@@ -52,41 +52,48 @@ module.exports.main = function(client, message, string) {
         let ids = checkIds(message,args,true);
         let emoji = client.emojis.find("name", ids.arg);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.react(emoji.id));
+            .then(message => message.react(emoji.id))
+            .catch(console.error);
     }
     if (string.startsWith("spamreact")) {
         let ids = checkIds(message,args,false);
         let emojis = client.emojis.random(20);
         emojis.forEach(function(item, index, array) {
             client.channels.get(ids.channel).fetchMessage(ids.message)
-                .then(message => message.react(item.id));
+                .then(message => message.react(item.id))
+                .catch(console.error);
           });
         
     }
     if (string.startsWith("delete")) {
         let ids = checkIds(message,args,false);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.delete());
+            .then(message => message.delete())
+            .catch(console.error);
     }
     if (string.startsWith("edit")) {
         let ids = checkIds(message,args,true);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.edit(ids.arg));
+            .then(message => message.edit(ids.arg))
+            .catch(console.error);
     }
     if (string.startsWith("clearreact")) {
         let ids = checkIds(message,args,false);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.clearReactions());
+            .then(message => message.clearReactions())
+            .catch(console.error);
     }
     if (string.startsWith("pin")) {
         let ids = checkIds(message,args,false);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.pin());
+            .then(message => message.pin())
+            .catch(console.error);
     }
     if (string.startsWith("unpin")) {
         let ids = checkIds(message,args,false);
         client.channels.get(ids.channel).fetchMessage(ids.message)
-            .then(message => message.pin());
+            .then(message => message.pin())
+            .catch(console.error);
     }
 
     // MEMBERS
