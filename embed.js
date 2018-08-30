@@ -117,7 +117,7 @@ module.exports.makeHelp = function() {
             },
             {
               "name": "Fonctions de recherche",
-              "value": "**gif <recherche>** : Cherche un gif sur Giphy\n**img <recherche>** : Cherche une image (Ne fonctionne plus)\n**wiki <recherche>** : Rechercher sur Wikipedia\n**learn me** : Apprend la vie avec Wikipedia. (Article au hasard)\n**reverse** <lien vers image> : Fait une recherche inversé et donne le premier résultat."
+              "value": "**gif <recherche>** : Cherche un gif sur Giphy\n**img <recherche>** : Cherche une image (Ne fonctionne plus)\n**wiki <recherche>** : Rechercher sur Wikipedia\n**learn me** : Apprend la vie avec Wikipedia. (Article au hasard)\n**reverse** <lien vers image> : Fait une recherche inversé et donne le premier résultat.\n**sub <nom de chaîne>** : Retourne le nombre d'abonnés de la chaîne."
             },
             {
               "name": "Fonctions audio",

@@ -36,10 +36,16 @@ const embed = require('./embed');
           if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne."); return;}
           request('https://www.youtube.com/subscribe_embed?channelid=' + ytChannel.id, function (error, response, body) {
             var regex = new RegExp('<span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed"  tabindex="0">([0-9]*)</span>');
-            var sub = regex.exec(body)[1];
-            var name = ytChannel.raw.snippet.channelTitle;
-            var img = ytChannel.raw.snippet.thumbnails.high;
-            channel.send(embed.makeYT(sub,name,img,ytChannel.id)).then(console.log).catch(console.log);
+            var presub = regex.exec(body);
+            if (presub && presub[1]) {
+              var sub = presub[1];
+              var name = ytChannel.raw.snippet.channelTitle;
+              var img = ytChannel.raw.snippet.thumbnails.high;
+              channel.send(embed.makeYT(sub,name,img,ytChannel.id)).then(console.log).catch(console.log);
+            } else {
+              channel.send("Je ne trouve pas cette chaîne."); 
+            }
+            
           }); 
         } ).catch(console.log);
         
