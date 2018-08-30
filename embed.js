@@ -83,7 +83,7 @@ module.exports.makeYT = function(sub,name,img,id) {
         "url" : img.url
       },
       "author": {
-        "name": "Yotube",
+        "name": "Youtube",
         "url": "https://youtube.com",
         "icon_url": "https://cdn.discordapp.com/attachments/480416542014701581/484672637751001100/YouTube-icon.png"
       }

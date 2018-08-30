@@ -33,9 +33,9 @@ const embed = require('./embed');
       youtube.searchChannels(string,1).then(results => 
         { 
           ytChannel = results[0];
-          if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne."); return;}
+          if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne. (1)"); return;}
           request('https://www.youtube.com/subscribe_embed?channelid=' + ytChannel.id, function (error, response, body) {
-            var regex = new RegExp('<span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed"  tabindex="0">([0-9]*)</span>');
+            var regex = new RegExp('<span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed"  tabindex="0">([^<>]*?)</span>');
             var presub = regex.exec(body);
             if (presub && presub[1]) {
               var sub = presub[1];
@@ -43,7 +43,7 @@ const embed = require('./embed');
               var img = ytChannel.raw.snippet.thumbnails.high;
               channel.send(embed.makeYT(sub,name,img,ytChannel.id)).then(console.log).catch(console.log);
             } else {
-              channel.send("Je ne trouve pas cette chaîne."); 
+              channel.send("Je ne trouve pas cette chaîne. (2)"); 
             }
             
           }); 
@@ -51,7 +51,7 @@ const embed = require('./embed');
         
     } catch (error) {
       console.error(error);
-     channel.send("Je ne trouve pas cette chaîne."); 
+     channel.send("Je ne trouve pas cette chaîne. (3)"); 
     }
   }
 
