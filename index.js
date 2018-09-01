@@ -1,8 +1,13 @@
 require('dotenv').config(); // For local dev
 
+const fs = require('fs');
+fs.writeFileSync('key.json' , process.env.KEY_GOOGLE_CONTENT); // For google cloud key file
+
 const Discord = require('discord.js');
 
-const googleTTS = require('google-tts-api');
+const textToSpeech = require('@google-cloud/text-to-speech');
+const tts = new textToSpeech.TextToSpeechClient();
+
 const asciify = require('asciify-image');
 
 const client = new Discord.Client();
@@ -16,10 +21,33 @@ const embed = require('./embed');
 require("./express");
 
 
-
 let logChannel;
 // Thetoto,Kim,Simby,Cheetwo,Rediamond
 let authUsers = ["227537120758071296","389454596160094228","239062648208097280","192631034683195393","205788570231767040"];
+
+function ttsfunc(text,guild) {
+  const request = {
+    input: {text: text},
+    voice: {languageCode: 'fr-FR', name: 'fr-FR-Wavenet-D'},
+    audioConfig: {audioEncoding: 'MP3'},
+  };
+  
+  tts.synthesizeSpeech(request, (err, response) => {
+    if (err) {
+      console.error('ERROR:', err);
+      return;
+    }
+    
+    fs.writeFile('output.mp3', response.audioContent, 'binary', err => {
+      if (err) {
+        console.error('ERROR:', err);
+        return;
+      }
+      console.log('Audio content written to file: output.mp3');
+      client.voiceConnections.get(guild.id).playFile('output.mp3');
+    });
+  });
+}
 
 client.on('warn', console.warn);
 
@@ -51,16 +79,9 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
 
   let sayFunc = function(user) {
     if (yt.getQueue().get(user.guild.id)) return; 
-    googleTTS("Bienvenue à "+ user.voiceChannel.name.split('_').join(' ') + ", " + user.displayName , 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-    .then(function (url) {
-      if (client.voiceConnections.get(user.voiceChannel.guild.id))
-        client.voiceConnections.get(user.voiceChannel.guild.id).playArbitraryInput(url);
-    })
-    .catch(function (err) {
-      console.error(err.stack);
-    });
+    let text = "Bienvenue à "+ user.voiceChannel.name.split('_').join(' ') + ", " + user.displayName;   // speed normal = 1 (default), slow = 0.24
+    ttsfunc(text,user.voiceChannel.guild);
   }
-
   if(oldMember.voiceChannel === undefined && newMember.voiceChannel !== undefined) {
     sayFunc(newMember);
   } else if(oldMember.voiceChannel === undefined) {
@@ -87,14 +108,7 @@ client.on('message', async message => {
   if (message.channel.id == "398510725812846592" || message.channel.id == "434774827665195019") {
     let serverQueue = yt.getQueue().get(message.guild.id); 
     if (!serverQueue) { 
-      googleTTS(message.content, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-      .then(function (url) {
-        if (client.voiceConnections.get(message.guild.id))
-          client.voiceConnections.get(message.guild.id).playArbitraryInput(url);
-      })
-      .catch(function (err) {
-        console.error(err.stack);
-      });
+      ttsfunc(message.content,message.guild);
     }
   }
 
@@ -164,7 +178,6 @@ client.on('message', async message => {
   if (lower === "listemojis") {
     var list = client.emojis;
     const emojiList = list.map(e=>e.toString()).join(" ");
-    // Buggy with this node version. Works good on node 10
     message.channel.send("Liste emojis : " + emojiList, {split:{char:" "}});
     return;
   }
@@ -209,8 +222,14 @@ client.on('message', async message => {
 
   if(lower.startsWith("js ") && checkUser(message.author)) {
     let text = message.content.slice(3);
-    eval(text);
-    console.log("Js exec");
+    try {
+      eval(text); 
+      console.log("Js exec");
+    } catch (error) {
+      console.error(error);
+      console.log('Error exec js');
+    }
+    
     return;
   }
 
@@ -223,13 +242,9 @@ client.on('message', async message => {
     } else { return; }
     
     let text = message.content.slice(6);
-    googleTTS(text, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-    .then(function (url) {
-      client.voiceConnections.get(message.guild.id).playArbitraryInput(url);
-    })
-    .catch(function (err) {
-      console.error(err.stack);
-    });
+
+    ttsfunc(text,message.guild);
+
     return;
   }
 
@@ -269,15 +284,15 @@ function logging(message, attach) {
     console.log("`" + message.guild.name + "` _" + message.channel.name + "_ = **" + message.author.username + "** : " + message.content , {files: attach});
   } 
   
-  // DM channels
+  // Logging DM channels
   else {
     console.log(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
     if(message.author.bot) return;
     let sendGuild = client.guilds.get('398141966254211072');
-    let sendChannel = sendGuild.channels.find('name', message.author.username)
+    let sendChannel = sendGuild.channels.find('name', message.author.username.replace(/[^\w]/gi, ''))
     if (!sendChannel) {
       console.log('create new channel');
-      sendGuild.createChannel(message.author.username)
+      sendGuild.createChannel(message.author.username.replace(/[^\w]/gi, ''))
       .then(function (theChannel) {
         theChannel.setParent(sendGuild.channels.get("479310662867353600"));
         theChannel.send("```h sendpm " + message.author.id + ' "message"```').then(x => x.pin());
@@ -290,7 +305,7 @@ function logging(message, attach) {
     }
   }
 
-  //Logging
+  //Logging specific guild
   if (message.guild && message.guild.id == "427475705714966540") {
     let sendGuild = client.guilds.get('398141966254211072');
     let sendChannel = sendGuild.channels.find('name', message.channel.name)

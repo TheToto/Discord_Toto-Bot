@@ -4,5 +4,7 @@ npm-debug.log
 
 # Local development
 *.env
+key.json
+output.mp3
 *.dev
 .DS_Store
