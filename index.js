@@ -22,8 +22,8 @@ require("./express");
 
 
 let logChannel;
-// Thetoto,Kim,Simby,Cheetwo,Rediamond
-let authUsers = ["227537120758071296","389454596160094228","239062648208097280","192631034683195393","205788570231767040"];
+// User ids that can use admin func (hack.js, js command, etc)
+let authUsers = (process.env.DISCORD_TRUSTED_USERS).split(",");
 
 function ttsfunc(text,guild) {
   const request = {
@@ -56,7 +56,7 @@ client.on('error', console.error);
 client.on('ready', () => {
   console.log('Discord Bot is running'); 
   embed.init(client);
-  logChannel = client.channels.get('450184906581082112');   
+  logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);   
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
@@ -99,12 +99,12 @@ client.on('message', async message => {
     attach = message.attachments.map(x => x.url);
   }
 
-  //Log DM and guild messages to a guild.
+  //Log DM.
   logging(message, attach);
 
   if(message.author.bot) return;
 
-  // Robot Len channel at Hotel saint louis
+  // Dont need to type "speak ..." in these channels.
   if (message.channel.id == "398510725812846592" || message.channel.id == "434774827665195019") {
     let serverQueue = yt.getQueue().get(message.guild.id); 
     if (!serverQueue) { 
@@ -263,8 +263,8 @@ client.on('message', async message => {
     message.channel.send(embed.makeHelp());
     return;
   }
-
-  let insult = ["ta gueule","tg","ferme la","connard","pd","salo","pute","ta mère","ta mer","ntm","fdp","la ferme","tchoin"];
+  //List of insults
+  let insult = (process.env.INSULTS).split(",");
   let checkInsult = function (item) {
     return lower.includes(item);
   }
@@ -288,33 +288,18 @@ function logging(message, attach) {
   else {
     console.log(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
     if(message.author.bot) return;
-    let sendGuild = client.guilds.get('398141966254211072');
-    let sendChannel = sendGuild.channels.find('name', message.author.username.replace(/[^\w]/gi, ''))
+    //let sendGuild = client.guilds.get('398141966254211072');
+    let sendGuild = client.guilds.get(process.env.DISCORD_DM_GUILD);
+    let sendChannel = sendGuild.channels.find('name', message.author.username.replace(/[^\w]/gi, '').toLocaleLowerCase());
     if (!sendChannel) {
       console.log('create new channel');
       sendGuild.createChannel(message.author.username.replace(/[^\w]/gi, ''))
       .then(function (theChannel) {
-        theChannel.setParent(sendGuild.channels.get("479310662867353600"));
+        theChannel.setParent(sendGuild.channels.get(process.env.DISCORD_DM_SECTION));
         theChannel.send("```h sendpm " + message.author.id + ' "message"```').then(x => x.pin());
         theChannel.send(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
       })
       .catch(console.log);
-      
-    } else {
-      sendChannel.send(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
-    }
-  }
-
-  //Logging specific guild
-  if (message.guild && message.guild.id == "427475705714966540") {
-    let sendGuild = client.guilds.get('398141966254211072');
-    let sendChannel = sendGuild.channels.find('name', message.channel.name)
-    if (!sendChannel) {
-      sendGuild.createChannel(message.channel.name,"text")
-      .then(function (theChannel) {
-        theChannel.setParent(sendGuild.channels.get("479315450187087883"));
-        theChannel.send(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
-      });
       
     } else {
       sendChannel.send(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
