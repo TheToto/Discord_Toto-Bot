@@ -1,14 +1,18 @@
 require('dotenv').config(); // For local dev
 
-const fs = require('fs');
-fs.writeFileSync('key.json' , process.env.KEY_GOOGLE_CONTENT); // For google cloud key file
-
 const Discord = require('discord.js');
 
-const textToSpeech = require('@google-cloud/text-to-speech');
-const tts = new textToSpeech.TextToSpeechClient();
-
 const asciify = require('asciify-image');
+const fs = require('fs');
+
+const textToSpeech = require('@google-cloud/text-to-speech');
+let tts;
+if (process.env.KEY_GOOGLE_CONTENT) {
+  const fs = require('fs');
+  fs.writeFileSync('key.json' , process.env.KEY_GOOGLE_CONTENT); // For google cloud key file
+
+  tts = new textToSpeech.TextToSpeechClient();
+}
 
 const client = new Discord.Client();
 
@@ -23,9 +27,17 @@ require("./express");
 
 let logChannel;
 // User ids that can use admin func (hack.js, js command, etc)
-let authUsers = (process.env.DISCORD_TRUSTED_USERS).split(",");
+let authUsers = [];
+if (process.env.DISCORD_TRUSTED_USERS)
+  authUsers = (process.env.DISCORD_TRUSTED_USERS).split(",");
+
+//List of insults
+let insults = []
+if (process.env.INSULTS)
+  insults = (process.env.INSULTS).split(",");
 
 function ttsfunc(text,guild) {
+  if (!process.env.KEY_GOOGLE_CONTENT) return;
   const request = {
     input: {text: text},
     voice: {languageCode: 'fr-FR', name: 'fr-FR-Wavenet-D'},
@@ -56,7 +68,8 @@ client.on('error', console.error);
 client.on('ready', () => {
   console.log('Discord Bot is running'); 
   embed.init(client);
-  logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);   
+  if (process.env.DISCORD_LOG_CHANNEL)
+    logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);   
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
@@ -65,12 +78,14 @@ client.on('disconnect', () => console.log('I just disconnected, making sure you 
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
  	
 client.on("guildCreate", guild => {
-  logChannel.send(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+  if (logChannel)
+    logChannel.send(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
 client.on("guildDelete", guild => {
-  logChannel.send(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+  if (logChannel)
+    logChannel.send(`I have been removed from: ${guild.name} (id: ${guild.id})`);
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
 });
 
@@ -263,14 +278,14 @@ client.on('message', async message => {
     message.channel.send(embed.makeHelp());
     return;
   }
-  //List of insults
-  let insult = (process.env.INSULTS).split(",");
+
   let checkInsult = function (item) {
     return lower.includes(item);
   }
 
-  if (message.isMentioned(client.user) && insult.some(checkInsult)) {
-    logChannel.send("`" + message.guild.name + "` _" + message.channel.name + "_ = **" + message.author.username + "** : " + message.content , {files: attach});
+  if (message.isMentioned(client.user) && insults.some(checkInsult)) {
+    if (logChannel)
+      logChannel.send("`" + message.guild.name + "` _" + message.channel.name + "_ = **" + message.author.username + "** : " + message.content , {files: attach});
     message.channel.send("PAPA ON M'INSULTE !! " + message.guild.members.get("227537120758071296"));
   }
 
@@ -280,15 +295,14 @@ client.on('message', async message => {
 
 // Debug
 function logging(message, attach) {
-  if (message.guild) {
+  if (message.guild) { 
     console.log("`" + message.guild.name + "` _" + message.channel.name + "_ = **" + message.author.username + "** : " + message.content , {files: attach});
   } 
   
   // Logging DM channels
-  else {
+  else if (process.env.DISCORD_DM_GUILD && process.env.DISCORD_DM_SECTION) {
     console.log(/*"`" + message.guild.name + "` _" + message.channel.name + "_ = **" +*/ "**" + message.author.username + "** : " + message.content , {files: attach});
     if(message.author.bot) return;
-    //let sendGuild = client.guilds.get('398141966254211072');
     let sendGuild = client.guilds.get(process.env.DISCORD_DM_GUILD);
     let sendChannel = sendGuild.channels.find('name', message.author.username.replace(/[^\w]/gi, '').toLocaleLowerCase());
     if (!sendChannel) {
