@@ -9,7 +9,7 @@ https://discordapp.com/oauth2/authorize?client_id=283064155156774912&permissions
 ## Si vous voulez l'utiliser, vous devez comfigurer un fichier .env contenant : 
 - (Seul 'key' est obligatoire, les autres sont optionnels.)
 
-
+```
 key=<Le token du bot Discord>
 
 GOOGLE_APPLICATION_CREDENTIALS='key.json'
@@ -23,3 +23,4 @@ DISCORD_DM_SECTION=<Id de la catégorie où seront stockés les messages privés
 DISCORD_TRUSTED_USERS=<Une liste d'id d'utilisateurs autorisés à utiliser les fonctions avancés>
 
 INSULTS=<Une liste d'insultes>
+```
