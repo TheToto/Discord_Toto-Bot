@@ -72,15 +72,25 @@ module.exports.makeGiphy = function(img_url) {
   }
 }
 
-module.exports.makeYT = function(sub,name,img,id) {
+module.exports.makeYT = function(sub,view,date,name,desc,img,id) {
+  let subtext;
+  if (sub == -1) {
+    subtext = "Cette chaîne cache ses abonnements :(";
+  } else {
+    subtext = "Cette chaîne possède **" + sub + "** abonnés.";
+  }
+  let viewtext = "Elle a **" + view + "** vues, et a été crée le **" + date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' }) + "**.";
   return embed = {
     "embed": {
       "title": name,
-      "description": "Cette chaîne possède " + sub + " abonnés",
+      "description": subtext + "\n" + viewtext,
       "url": "https://www.youtube.com/channel/" + id,
       "color": color,
       "thumbnail" : {
         "url" : img.url
+      },
+      "footer": {
+        "text": desc
       },
       "author": {
         "name": "Youtube",

@@ -8,7 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --icu-data-dir=node_modules\\full-icu index.js",
     "test": "node index.js"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "express": "^4.16.3",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^4.0.0",
+    "full-icu": "^1.2.1",
     "giphy-api": "^1.2.7",
     "google-tts-api": "0.0.2",
     "https": "^1.0.0",

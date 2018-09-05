@@ -27,31 +27,33 @@ const embed = require('./embed');
 
   module.exports.ytSub = function (channel, string) {
     try {
-      
-      console.log(string);
       let ytChannel;
       youtube.searchChannels(string,1).then(results => 
         { 
           ytChannel = results[0];
-          if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne. (1)"); return;}
-          request('https://www.youtube.com/subscribe_embed?channelid=' + ytChannel.id, function (error, response, body) {
-            var regex = new RegExp('<span class="yt-subscription-button-subscriber-count-branded-horizontal subscribed"  tabindex="0">([^<>]*?)</span>');
-            var presub = regex.exec(body);
-            if (presub && presub[1]) {
-              var sub = presub[1];
-              var name = ytChannel.raw.snippet.channelTitle;
-              var img = ytChannel.raw.snippet.thumbnails.high;
-              channel.send(embed.makeYT(sub,name,img,ytChannel.id)).then(console.log).catch(console.log);
+          console.log(results[0]);
+          if (!ytChannel) {channel.send("Je ne trouve pas cette chaîne."); return;}
+          youtube.getChannel('https://www.youtube.com/channel/'+ytChannel.id, {part: "statistics"})
+          .then(results => {
+            let name = ytChannel.raw.snippet.channelTitle;
+            let img = ytChannel.raw.snippet.thumbnails.high;
+            let desc = ytChannel.raw.snippet.description;
+            let view = results.raw.statistics.viewCount;
+            let date = new Date(ytChannel.raw.snippet.publishedAt);
+            let sub;
+            if (!results.raw.statistics.hiddenSubscriberCount) {
+              sub = results.raw.statistics.subscriberCount;
             } else {
-              channel.send("Je ne trouve pas cette chaîne. (2)"); 
+              sub = -1;
             }
-            
-          }); 
+            channel.send(embed.makeYT(sub,view,date,name,desc,img,ytChannel.id)).then().catch(console.error);
+            console.log(results);
+          })
         } ).catch(console.log);
         
     } catch (error) {
       console.error(error);
-     channel.send("Je ne trouve pas cette chaîne. (3)"); 
+     channel.send("Je ne trouve pas cette chaîne. (Erreur inconnue)"); 
     }
   }
 
