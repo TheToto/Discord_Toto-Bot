@@ -185,6 +185,12 @@ client.on('message', async message => {
     return;
   }
 
+  if(lower.startsWith("meme ")) {
+    let text = message.content.slice(5);
+    search.makeMeme(message.channel, text);
+    return;
+  }
+
   if (lower === ('merci')) {
     message.channel.send('SIMB !');
     return;

@@ -72,6 +72,21 @@ module.exports.makeGiphy = function(img_url) {
   }
 }
 
+module.exports.makeMeme = function() {
+  return embed = {
+    embed: {
+        color: color,
+        image: {
+            url: "attachment://meme.png"
+        },
+        author: {
+            name: "Meme Creator"
+        }
+    },
+    files: [{ attachment: "output.png", name: 'meme.png' }] 
+  }
+}
+
 module.exports.makeYT = function(sub,view,date,name,desc,img,id) {
   let subtext;
   if (sub == -1) {
@@ -127,7 +142,7 @@ module.exports.makeHelp = function() {
             },
             {
               "name": "Fonctions de recherche",
-              "value": "**gif <recherche>** : Cherche un gif sur Giphy\n**img <recherche>** : Cherche une image (Ne fonctionne plus)\n**wiki <recherche>** : Rechercher sur Wikipedia\n**learn me** : Apprend la vie avec Wikipedia. (Article au hasard)\n**reverse** <lien vers image> : Fait une recherche inversé et donne le premier résultat.\n**sub <nom de chaîne>** : Retourne le nombre d'abonnés de la chaîne."
+              "value": "**gif <recherche>** : Cherche un gif sur Giphy\n**img <recherche>** : Cherche une image (Ne fonctionne plus)\n**wiki <recherche>** : Rechercher sur Wikipedia\n**learn me** : Apprend la vie avec Wikipedia. (Article au hasard)\n**reverse <lien vers image>** : Fait une recherche inversé et donne le premier résultat.\n**sub <nom de chaîne>** : Retourne le nombre d'abonnés de la chaîne."
             },
             {
               "name": "Fonctions audio",
@@ -139,7 +154,7 @@ module.exports.makeHelp = function() {
             },
             {
               "name": "Autres fonctions",
-              "value": "**ascii** ou **ascii2** avec une image en attachment : Converti l'image en caractères ASCII.\n**help me** : Affiche ce message\n**h <commande>** : Commandes d'administration, plus d'infos : **help h**\n**listemojis** : Affiche tout les emojis dont le bot a accès.\n**ping** : Pong."
+              "value": "**meme \"TEXTE HAUT\" \"TEXTE BAS\" <url image>** : Crée un meme à partir de ton image.\n**ascii** ou **ascii2** avec une image en attachment : Converti l'image en caractères ASCII.\n**help me** : Affiche ce message\n**h <commande>** : Commandes d'administration\n**listemojis** : Affiche tout les emojis dont le bot a accès.\n**ping** : Pong."
             }
           ]
         }

@@ -3,6 +3,8 @@ var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
 var request = require('request');
 const YouTube = require('simple-youtube-api');
 const youtube = new YouTube("AIzaSyCqBQKdwzqSBqrkWUPOlO-SSjC0vlgscFk");
+const fs = require('fs');
+let meme = require('meme-maker');
 
 const embed = require('./embed');
 
@@ -22,6 +24,66 @@ const embed = require('./embed');
     request(options,(_err,_res,body)=>{
         channel.send(embed.makeReverse(body));
     })
+  }
+
+  function splitArgs(string) {
+    var myRegexp = /[^\s"]+|"([^"]*)"/gi;
+    var myArray = [];
+    do {
+        var match = myRegexp.exec(string);
+        if (match != null)
+            myArray.push(match[1] ? match[1] : match[0]);
+    } while (match != null);
+    return myArray;
+  }
+
+  function download(uri, filename, callback) {
+    request.head(uri, function(err, res, body){
+      console.log('content-type:', res.headers['content-type']);
+      console.log('content-length:', res.headers['content-length']);
+  
+      request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+    });
+  };
+  
+
+  module.exports.makeMeme = function(channel, string) {
+    let args = splitArgs(string);
+    if (args.length < 3) {
+      channel.send('Tu as mal formulé ta requête...');
+      return;
+    }
+    download(args[2], 'input.png', function(){
+      if(fs.existsSync("input.png")) {
+        let options = {
+          image: 'input.png',         // Required
+          outfile: 'output.png',  // Required
+          topText: args[0],            // Required
+          bottomText: args[1],           // Optional
+          //font: '/path/to/font.ttf',      // Optional
+          //fontSize: 50,                   // Optional
+          //fontFill: '#FFF',               // Optional
+          //textPos: 'center',              // Optional
+          //strokeColor: '#000',            // Optional
+          //strokeWeight: 2                 // Optional
+        }
+        meme(options, function(err) {
+          if(err) {
+            console.error(err);
+            channel.send("Une erreur est survenue dans la création du meme... :c");
+            return;
+          }
+          console.log('Image temporaly saved: ' + options.outfile);
+          channel.send(embed.makeMeme()).then(res => {
+            fs.unlink("input.png");
+            fs.unlink("output.png");
+          });
+        });
+      } else {
+        channel.send("J'ai pas réussi à télécharger ton image...");
+      }
+    });
+
   }
 
   module.exports.ytSub = function (channel, string) {

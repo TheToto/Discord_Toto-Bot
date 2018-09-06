@@ -25,6 +25,7 @@
     "giphy-api": "^1.2.7",
     "https": "^1.0.0",
     "libsodium-wrappers": "^0.7.3",
+    "meme-maker": "github:Thetoto/meme-maker",
     "node-opus": "^0.3",
     "request": "^2.88.0",
     "simple-youtube-api": "^5.0.2",
