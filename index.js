@@ -166,6 +166,13 @@ client.on('message', async message => {
     return;
   }
 
+  if (lower.includes(':hug:')) {
+    let emoji = client.emojis.find("name", "hug"); 
+    if (!emoji) return;
+    message.channel.send(emoji.toString());
+    return;
+  }
+
   if (lower.includes('aurore')) {
     const ayy = client.emojis.find("name", "aurtong");
     if (ayy) {
