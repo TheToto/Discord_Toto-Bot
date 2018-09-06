@@ -5,8 +5,8 @@ npm-debug.log
 # Local development
 *.env
 key.json
-output.mp3
-input.png
-output.png
+output*.mp3
+input*.png
+output*.png
 *.dev
 .DS_Store

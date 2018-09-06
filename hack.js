@@ -1,13 +1,3 @@
-function splitArgs(string) {
-    var myRegexp = /[^\s"]+|"([^"]*)"/gi;
-    var myArray = [];
-    do {
-        var match = myRegexp.exec(string);
-        if (match != null)
-            myArray.push(match[1] ? match[1] : match[0]);
-    } while (match != null);
-    return myArray;
-}
 
 function checkIds(message,args,isArg = false) {
     let guildId = message.guild.id;
@@ -39,7 +29,7 @@ function checkIds(message,args,isArg = false) {
 }
 
 module.exports.main = function(client, message, string) {
-    let args = splitArgs(string);
+    let args = tools.splitArgs(string);
 
     // SPECIAL
     if (string.startsWith("send ")) {

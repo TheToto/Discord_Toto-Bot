@@ -11,15 +11,14 @@ module.exports.makeTranzat = function(img_url) {
             color: color,
             description: "Créez votre tranzat sur [Tranzat Creator](https://tranzat.tk)",
             image: {
-                url: "attachment://tranzat.png"
+                url: img_url
             },
             author: {
                 name: "Tranzat Creator",
                 url: "https://tranzat.tk",
                 icon_url: "https://cdn.discordapp.com/attachments/480416542014701581/480772692908441631/tranzat.png"
             }
-        },
-        files: [{ attachment: img_url, name: 'tranzat.png' }] 
+        }
     }
 }
 
