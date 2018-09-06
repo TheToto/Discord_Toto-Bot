@@ -42,10 +42,10 @@ module.exports.main = async function (msg,client) { // eslint-disable-line
 		if (!voiceChannel) return msg.channel.send('Tu n\'est pas dans un salon vocal :(!');
 		const permissions = voiceChannel.permissionsFor(msg.client.user);
 		if (!permissions.has('CONNECT')) {
-			return msg.channel.send('J\'ai pas les droits FDP !');
+			return msg.channel.send('J\'ai pas les droits :`\'( ! (CONNECT)');
 		}
 		if (!permissions.has('SPEAK')) {
-			return msg.channel.send('J\'ai pas les droits FDP ! (2)');
+			return msg.channel.send('J\'ai pas les droits :`\'( ! (SPEAK)');
 		}
 
 		if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {

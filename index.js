@@ -20,11 +20,12 @@ const client = new Discord.Client();
 const yt = require('./yt');
 const search = require('./search');
 const hack = require('./hack');
+const image = require('./image');
 const embed = require('./embed');
 //Launch Webserver for Heroku free dynos
 require("./express");
 
-
+let trashchannel;
 let logChannel;
 // User ids that can use admin func (hack.js, js command, etc)
 let authUsers = [];
@@ -68,6 +69,7 @@ client.on('error', console.error);
 client.on('ready', () => {
   console.log('Discord Bot is running'); 
   embed.init(client);
+  trashchannel = client.channels.get("487266573820755968");
   if (process.env.DISCORD_LOG_CHANNEL)
     logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);   
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
@@ -194,7 +196,7 @@ client.on('message', async message => {
 
   if(lower.startsWith("meme ")) {
     let text = message.content.slice(5);
-    search.makeMeme(message.channel, text);
+    image.makeMeme(message.channel, text, message.author, trashchannel);
     return;
   }
 

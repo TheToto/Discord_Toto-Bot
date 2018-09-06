@@ -72,18 +72,24 @@ module.exports.makeGiphy = function(img_url) {
   }
 }
 
-module.exports.makeMeme = function() {
+module.exports.makeMeme = function(path, isHelp = true) {
+  let content;
+  if (isHelp) {
+    content = "Pour ajuster la taille de la police, cliquez sur les emojis. Vous avez 15 secondes entre chaque clic.";
+  } else {
+    content = "Voici ton meme :)";
+  }
   return embed = {
     embed: {
         color: color,
+        description: content,
         image: {
-            url: "attachment://meme.png"
+            url: path
         },
         author: {
             name: "Meme Creator"
         }
-    },
-    files: [{ attachment: "output.png", name: 'meme.png' }] 
+    }
   }
 }
 

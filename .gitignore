@@ -6,6 +6,7 @@ npm-debug.log
 *.env
 key.json
 output.mp3
+input.png
 output.png
 *.dev
 .DS_Store
