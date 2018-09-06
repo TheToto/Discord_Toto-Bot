@@ -1,6 +1,5 @@
 const https = require("https");
 var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
-var randomInt = require('random-int');
 var request = require('request');
 const YouTube = require('simple-youtube-api');
 const youtube = new YouTube("AIzaSyCqBQKdwzqSBqrkWUPOlO-SSjC0vlgscFk");
@@ -62,7 +61,7 @@ const embed = require('./embed');
   }
   
   module.exports.giphySearch = function (channel, string) {
-    var i = randomInt(0, 50);
+    var i = Math.floor(Math.random() * 50);
     giphy.search({
       q: string,
       limit: '1',
