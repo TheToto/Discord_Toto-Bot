@@ -16,15 +16,21 @@ if (process.env.KEY_GOOGLE_CONTENT) {
 
 const client = new Discord.Client();
 
+//Ugly error handler
+process.on('uncaughtException', function (error) {
+  console.log(error.stack);
+});
+
 //Load external files
 const yt = require('./yt');
 const search = require('./search');
 const hack = require('./hack');
+const image = require('./image');
 const embed = require('./embed');
 //Launch Webserver for Heroku free dynos
 require("./express");
 
-
+let trashchannel;
 let logChannel;
 // User ids that can use admin func (hack.js, js command, etc)
 let authUsers = [];
@@ -50,13 +56,13 @@ function ttsfunc(text,guild) {
       return;
     }
     
-    fs.writeFile('output.mp3', response.audioContent, 'binary', err => {
+    fs.writeFile('output' + guild.id + '.mp3', response.audioContent, 'binary', err => {
       if (err) {
         console.error('ERROR:', err);
         return;
       }
-      console.log('Audio content written to file: output.mp3');
-      client.voiceConnections.get(guild.id).playFile('output.mp3');
+      console.log('Audio content written to file: output' + guild.id + '.mp3');
+      client.voiceConnections.get(guild.id).playFile('output' + guild.id + '.mp3');
     });
   });
 }
@@ -68,6 +74,7 @@ client.on('error', console.error);
 client.on('ready', () => {
   console.log('Discord Bot is running'); 
   embed.init(client);
+  trashchannel = client.channels.get("487266573820755968");
   if (process.env.DISCORD_LOG_CHANNEL)
     logChannel = client.channels.get(process.env.DISCORD_LOG_CHANNEL);   
   client.user.setPresence({ status: 'online', game: { name: `J'occupe ${client.guilds.size} serveurs (tapez "help me")` } });
@@ -182,8 +189,7 @@ client.on('message', async message => {
 
   // A changer avec le nouveau tranzat creator
   if (lower.includes('tranzat')) {
-    var i = Math.random();
-    message.channel.send(embed.makeTranzat('https://tranzat.tk/tranzat/random.php?'+i+".png"));
+    image.sendTranzat(message.channel, message.author);
   }
 
   if(lower.startsWith("reverse ")) {
@@ -194,7 +200,7 @@ client.on('message', async message => {
 
   if(lower.startsWith("meme ")) {
     let text = message.content.slice(5);
-    search.makeMeme(message.channel, text);
+    image.makeMeme(message, text, trashchannel);
     return;
   }
 

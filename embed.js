@@ -11,15 +11,14 @@ module.exports.makeTranzat = function(img_url) {
             color: color,
             description: "Créez votre tranzat sur [Tranzat Creator](https://tranzat.tk)",
             image: {
-                url: "attachment://tranzat.png"
+                url: img_url
             },
             author: {
                 name: "Tranzat Creator",
                 url: "https://tranzat.tk",
                 icon_url: "https://cdn.discordapp.com/attachments/480416542014701581/480772692908441631/tranzat.png"
             }
-        },
-        files: [{ attachment: img_url, name: 'tranzat.png' }] 
+        }
     }
 }
 
@@ -72,18 +71,24 @@ module.exports.makeGiphy = function(img_url) {
   }
 }
 
-module.exports.makeMeme = function() {
+module.exports.makeMeme = function(path, isHelp = true) {
+  let content;
+  if (isHelp) {
+    content = "Pour ajuster la taille de la police, cliquez sur les emojis. Vous avez 15 secondes entre chaque clic.";
+  } else {
+    content = "Voici ton meme :)";
+  }
   return embed = {
     embed: {
         color: color,
+        description: content,
         image: {
-            url: "attachment://meme.png"
+            url: path
         },
         author: {
             name: "Meme Creator"
         }
-    },
-    files: [{ attachment: "output.png", name: 'meme.png' }] 
+    }
   }
 }
 
