@@ -1,3 +1,4 @@
+const tools = require('./tools');
 
 function checkIds(message,args,isArg = false) {
     let guildId = message.guild.id;

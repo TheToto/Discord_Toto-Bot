@@ -27,6 +27,7 @@ const search = require('./search');
 const hack = require('./hack');
 const image = require('./image');
 const embed = require('./embed');
+const tools = require('./tools');
 //Launch Webserver for Heroku free dynos
 require("./express");
 
