@@ -5,13 +5,16 @@ const Discord = require('discord.js');
 const asciify = require('asciify-image');
 const fs = require('fs');
 
+const {Translate} = require('@google-cloud/translate');
 const textToSpeech = require('@google-cloud/text-to-speech');
 let tts;
+let translate;
 if (process.env.KEY_GOOGLE_CONTENT) {
   const fs = require('fs');
   fs.writeFileSync('key.json' , process.env.KEY_GOOGLE_CONTENT); // For google cloud key file
 
   tts = new textToSpeech.TextToSpeechClient();
+  translate = new Translate({ projectId: 1073043353316, });
 }
 
 const client = new Discord.Client();
@@ -287,6 +290,37 @@ client.on('message', async message => {
     let text = message.content.slice(5);
     search.searchWiki(message.channel, text);
     return;
+  }
+
+  if (lower.startsWith("translate "))
+  {
+      let text = message.content.slice(10);
+      translate
+  .translate(text, "fr")
+  .then(results => {
+    const translation = results[0];
+    message.channel.send(`Traduction en français : ${translation}`);
+  })
+  .catch(err => {
+    console.error('ERROR:', err);
+  });
+  return;
+  }
+
+  if (lower.startsWith("translate_"))
+  {
+      let dest = message.content[10].toString() + message.content[11].toString();
+      let text = message.content.slice(12);
+      translate
+  .translate(text, dest)
+  .then(results => {
+    const translation = results[0];
+    message.channel.send(`Traduction en ${dest} : ${translation}`);
+  })
+  .catch(err => {
+    console.error('ERROR:', err);
+  });
+  return;
   }
 
   if (lower.startsWith('learn me')) {
