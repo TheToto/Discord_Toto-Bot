@@ -4,7 +4,7 @@ const { Client, Util } = require('discord.js');
 const YouTube = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
 
-const youtube = new YouTube("AIzaSyC8yuez8WMzpdfXb4iHPXtGflGRV1wp94I");
+const youtube = new YouTube(process.env.YOUTUBE_API_KEY);
 
 const queue = new Map();
 

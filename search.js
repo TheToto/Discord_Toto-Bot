@@ -1,8 +1,8 @@
 const https = require("https");
-var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
+var giphy = require('giphy-api')(process.env.GIPHY_API);
 var request = require('request');
 const YouTube = require('simple-youtube-api');
-const youtube = new YouTube("AIzaSyC8yuez8WMzpdfXb4iHPXtGflGRV1wp94I");
+const youtube = new YouTube(process.env.YOUTUBE_API_KEY);
 
 const embed = require('./embed');
 
