@@ -2,7 +2,7 @@ const https = require("https");
 var giphy = require('giphy-api')('9trrTqYcZUbUx3bJGJOVALDA1E3DcTRE');
 var request = require('request');
 const YouTube = require('simple-youtube-api');
-const youtube = new YouTube("AIzaSyCqBQKdwzqSBqrkWUPOlO-SSjC0vlgscFk");
+const youtube = new YouTube("AIzaSyC8yuez8WMzpdfXb4iHPXtGflGRV1wp94I");
 
 const embed = require('./embed');
 

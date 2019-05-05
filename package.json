@@ -21,7 +21,7 @@
     "erlpack": "github:discordapp/erlpack",
     "eval": "^0.1.2",
     "express": "^4.16.3",
-    "ffmpeg-binaries": "^4.0.0",
+    "ffmpeg-binaries": "github:BannerBomb/node-ffmpeg-binaries#patch-1",
     "full-icu": "^1.2.1",
     "giphy-api": "^1.2.7",
     "https": "^1.0.0",
