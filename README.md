@@ -23,4 +23,9 @@ DISCORD_DM_SECTION=<Id de la catégorie où seront stockés les messages privés
 DISCORD_TRUSTED_USERS=<Une liste d'id d'utilisateurs autorisés à utiliser les fonctions avancés>
 
 INSULTS=<Une liste d'insultes>
+
+YOUTUBE_API_KEY=<Api key youtube>
+
+GIPHY_API=<Giphy api key>
+
 ```
