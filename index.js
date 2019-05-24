@@ -46,11 +46,30 @@ let insults = []
 if (process.env.INSULTS)
     insults = (process.env.INSULTS).split(",");
 
-function ttsfunc(text, guild) {
+function search_tts(text, guild, search = undefined) {
+    if (search != undefined) {
+        tts.listVoices({})
+            .then(responses => {
+                const response = responses[0];
+                var array = Array.from(response.voices);
+                array = response.voices.filter(voice => voice.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+                console.log(array);
+                var rand = array[Math.floor(Math.random() * array.length)];
+                if (rand == undefined)
+                    ttsfunc(text, guild, { languageCode: 'fr-FR', name: 'fr-FR-Wavenet-D' });
+                else
+                    ttsfunc(text, guild, { languageCode: rand.languageCodes[0], name: rand.name });
+            });
+    } else {
+        ttsfunc(text, guild, { languageCode: 'fr-FR', name: 'fr-FR-Wavenet-D' });
+    }
+}
+
+function ttsfunc(text, guild, voice) {
     if (!process.env.KEY_GOOGLE_CONTENT) return;
     const request = {
         input: { text: text },
-        voice: { languageCode: 'fr-FR', name: 'fr-FR-Wavenet-D' },
+        voice: voice,
         audioConfig: { audioEncoding: 'MP3' },
     };
 
@@ -134,7 +153,7 @@ client.on('message', async message => {
     if (message.channel.id == "398510725812846592" || message.channel.id == "434774827665195019") {
         let serverQueue = yt.getQueue().get(message.guild.id);
         if (!serverQueue) {
-            ttsfunc(message.content, message.guild);
+            search_tts(message.content, message.guild);
         }
     }
 
@@ -280,7 +299,24 @@ client.on('message', async message => {
 
         let text = message.content.slice(6);
 
-        ttsfunc(text, message.guild);
+        search_tts(text, message.guild);
+
+        return;
+    }
+    if (lower.startsWith("speak_")) {
+        let serverQueue = yt.getQueue().get(message.guild.id);
+        if (serverQueue) return;
+
+        if (message.member.voiceChannel) {
+            message.member.voiceChannel.join();
+        } else { return; }
+
+        let first = message.content.split(' ')[0];
+        let search = first.slice(6);
+
+        let text = message.content.slice(first.length + 1);
+
+        search_tts(text, message.guild, search);
 
         return;
     }
