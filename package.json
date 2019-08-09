@@ -14,7 +14,7 @@
   "dependencies": {
     "@google-cloud/text-to-speech": "^0.3.0",
     "@google-cloud/translate": "^2.1.3",
-    "asciify-image": "github:Thetoto/asciify-image",
+    "asciify-image": "github:forked-things/asciify-image",
     "bufferutil": "^3.0.5",
     "discord.js": "^11.4.2",
     "dotenv": "^6.0.0",
@@ -26,7 +26,7 @@
     "giphy-api": "^1.2.7",
     "https": "^1.0.0",
     "libsodium-wrappers": "^0.7.3",
-    "meme-maker": "github:Thetoto/meme-maker",
+    "meme-maker": "github:forked-things/meme-maker",
     "node-opus": "^0.2.9",
     "request": "^2.88.0",
     "simple-youtube-api": "^5.0.2",
